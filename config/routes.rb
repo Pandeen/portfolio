@@ -1,5 +1,13 @@
 Rails.application.routes.draw do
-  devise_for :users
+  get 'portal/dashboard'
+
+  devise_for :users, :skip => [:sessions]
+  as :user do
+    get '/portal/login' => 'devise/sessions#new', :as => :new_user_session
+    post '/portal/login' => 'devise/sessions#create', :as => :user_session
+    match '/portal/logout' => 'devise/sessions#destroy', :as => :destroy_user_session,
+      :via => Devise.mappings[:user].sign_out_via
+  end
 
   root to: 'pages#index'
 
