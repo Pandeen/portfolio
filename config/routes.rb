@@ -1,19 +1,28 @@
 Rails.application.routes.draw do
   get 'portal/dashboard'
 
-  devise_for :users, :skip => [:sessions]
-  as :user do
-    get '/portal/login' => 'devise/sessions#new', :as => :new_user_session
-    post '/portal/login' => 'devise/sessions#create', :as => :user_session
-    match '/portal/logout' => 'devise/sessions#destroy', :as => :destroy_user_session,
-      :via => Devise.mappings[:user].sign_out_via
-  end
+  devise_for :users
+  #, :skip => [:sessions]
+  #as :user do
+  #  get '/portal/login' => 'devise/sessions#new', :as => :new_user_session
+  #  post '/portal/login' => 'devise/sessions#create', :as => :user_session
+  #  match '/portal/logout' => 'devise/sessions#destroy', :as => :destroy_user_session,
+  #    :via => Devise.mappings[:user].sign_out_via
+  #end
 
   root to: 'pages#index'
 
   get '/portfolio', to: 'pages#portfolio'
 
   get 'pages/contact', as: '/contact'
+  
+  namespace :api do
+    namespace :v1 do
+      resources :licenses
+    end
+  end
+    #get '/api/licenses', to: 'api/licenses#show'
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
